@@ -114,7 +114,7 @@ body {
 
 /*I needed a different body tag's name because for this one, we want to repeat the background image*/
 #body_result_page {
-  background: url('Images/front-media.jpg');
+  background: url('front-media.jpg');
   background-repeat: repeat;
 }
 
