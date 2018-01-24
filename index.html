@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My first website</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- link to awesome font for my social media icons -->
+	<script src="jquery-3.2.1.min.js"> </script> <!-- the three next scripts tags allow me to use the textillate master library and use dynamic text -->
+	<script src="textillate-master/jquery.textillate.js"></script>
+	<script src="textillate-master/assets/jquery.lettering.js"></script>
+</head>
+
+<body>
+	<header>
+      <h1 class="title">GOOD NEWS SELLS TOO</h1>
+  </header>
+
+
+	<section id="main_section">
+
+
+			<div id="div_form">
+				<h2>Enter a topic</h2>
+				<form>
+					<input id="search_box" type="text"><br>
+					<input id="button_form" type="button" value="submit">
+				</form>
+
+			</div>
+
+				<div id="div_text">
+					<h2><strong>It's time for good news</strong></h2>
+					<p class="div_text_p">We love bad news and the media companies know it. The old adage "bad news sells" found a new signification in the 21st century.</p>
+
+					<p class="div_text_p">Besides, at no point in modern history society has been exposed to or as well informed about tragedy. </p>
+
+					<p class="div_text_p">With good news/bad news, you get to consciously choose to read either positive news or negative news about the topic you want. You can decide how to consume news media. Let's start!</p>
+				</div>
+
+
+
+	</section>
+
+
+
+    <script>
+
+// Textillate master plugin for dynamic writing
+		$('.div_text_p').textillate({
+			in: {effect: 'bounceInUp', delay:5},
+			out: {effect: 'rollOut', sync: true},
+			loop: true
+		});
+
+// I only need one function on this page since the big part of the JS code is on my next page: result_articles.html
+
+// This function will send the internet-user on a new page and trigger the research of the topic on this new page
+			var searchTopic = document.querySelector('#button_form');
+			searchTopic.addEventListener('click', function() {
+					var topic = document.querySelector('#search_box').value;
+					var new_page = document.location.href = 'result_articles.html?topic=' + encodeURIComponent(topic);
+				});
+
+
+
+
+
+    </script>
+
+		<footer>
+
+			<div id="social_media">
+
+        <!-- This hyperlink tag nest i tags representing the awesome font. The awesome font allow me to display nice social media icons -->
+				<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+				<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+				<a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+
+			</div>
+
+			<div id="footer_text">
+				<!-- Quick access to the two main APIs I used if someone wants more information -->
+				<p> Use of the <a href="https://dandelion.eu/">Dandelion API's</a> sentiment analysis</p>
+				<p> Use of the <a href="https://newsapi.org/s/google-news-api">Google News API</a></p>
+
+			</div>
+
+
+		</footer>
+
+
+</body>
+
+</html>

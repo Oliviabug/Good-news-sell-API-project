@@ -1,0 +1,438 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url('Images/front-media.jpg');
+  background-size: cover;
+  font-family: serif;
+  font-size: 16px; /* that's the reference when I will use the rem relative unit */
+}
+
+
+ .title {
+   color: rgb(238,44,44);
+   font-family: impact, charcoal, sans-serif; /* I will only use this font for titles*/
+   font-size: 4rem;
+   text-align: center;
+   text-shadow: 2px 2px grey;
+ }
+
+
+
+
+#main_section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+
+#div_text h2 {
+  text-align: center;
+  color: rgb(238,44,44);
+  text-shadow: 1px 1px grey;
+  font-size: 2rem;
+  font-family: impact, charcoal, sans-serif;
+}
+
+#div_text {
+  margin: 1.5rem 3rem 0 0;
+  flex: 0 0 45%;
+  color: black;
+  font-size: 1.2rem;
+  font-family: sans-serif; /* I use this basic and easy-to-read font for all my paragraphs*/
+  line-height: 2rem;
+}
+
+#div_text p {
+  justify-content: center;
+  align-content: center;
+}
+
+#div_form {
+  flex: 0 0 35%;
+  top: 60%;
+  left: 50%;
+  margin: auto;
+  padding: 5rem 3rem;
+  box-sizing: border-box;
+  background: rgba(0,0,0,.5); /* 0 0 0 is the black color and the .5 is the opacity rate */
+  font-family: sans-serif;
+}
+
+#div_form input {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* the next element is the part of the form where we enter the text */
+#div_form input[type="text"] {
+  border: none;
+  border-bottom: 1px solid #fff;
+  background: transparent;
+  outline: none;
+  height: 2.2rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+/* it's pretty intuitive for this one: this is the red button with submit in black font */
+#div_form input[type="button"] {
+  width: 60%;
+  margin-left: 4rem;
+  margin-right: 2.4rem;
+  margin-top: 1.2rem;
+  border: none;
+  outline: none;
+  height: 2.5rem;
+  font-size: 1rem;
+  background: red;
+  cursor: pointer;
+  border-radius: 2rem;
+
+}
+
+#div_form input[type="button"]:hover {
+  background: red;
+  color: aliceBlue;
+}
+
+
+#div_form h2 {
+  color: white;
+  margin: 0;
+  padding: 0 0 20px;
+  text-align: center;
+  text-shadow: 0.15rem 0.15rem grey;
+}
+
+
+/* start of result_articles.html webpage*/
+
+/*I needed a different body tag's name because for this one, we want to repeat the background image*/
+#body_result_page {
+  background: url('Images/front-media.jpg');
+  background-repeat: repeat;
+}
+
+/*same logic for the header because I added some bottom margin*/
+#header_result_page {
+  margin-bottom: 5rem;
+}
+
+
+#link_index a {
+  text-decoration: none;
+  color: white;
+  font-family: sans-serif;
+  font-size: 1.7rem;
+  margin-left: 6rem;
+  margin-bottom: 3rem;
+
+}
+
+#link_index a:hover {
+  color: rgb(238,44,44);
+}
+
+
+#explanation_graph_section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: white;
+  justify-content: center;
+  margin: 0 5rem 5rem 5rem;
+  border-radius: 2rem;
+}
+
+#explanation {
+  flex: 0 0 95%;
+  font-size: 1.1rem;
+  font-family: sans-serif;
+  margin: 2rem 5rem 2.5rem 5rem;
+  text-align: justify;
+
+}
+
+/*Plotly graph are not naturally responsive*/
+#graph_div {
+  flex: 0 0 55%;
+  margin: 0 10rem 0 10rem;
+}
+
+/* this is the next and the more important section that displays the result of my API requests */
+#articles_section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: rgb(255, 255, 255);
+  border-radius: 2rem;
+  margin: 0 5rem 5rem 5rem;
+}
+
+
+/* div created with JS which encompass each article. One article_wrapper for each article */
+#article_wrapper {
+  background-color: rgb(220,220,220);
+  max-width: 90%;
+  margin-bottom: 2.5rem;
+}
+
+#positive_output {
+  flex: 0 0 45%;
+  margin-left: 2rem;
+}
+
+#positive_output h3 {
+  justify-content: center;
+  font-family: impact, charcoal, sans-serif;
+  font-size: 2rem;
+  margin: 0 7rem 2rem 7rem;
+}
+
+#positive_output img {
+  max-width: 95%;
+}
+
+/* At the end of the positive articles, I just add a funny picture to emphasize the lack of good news in comparison with the negative news */
+#oops p {
+  font-size: 1.2rem;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+#negative_output {
+  flex: 0 0 45%;
+  margin-left: 2rem;
+}
+
+#negative_output img {
+  max-width: 95%;
+}
+
+
+#negative_output h3 {
+  justify-content: center;
+  font-family: impact, charcoal, sans-serif;
+  font-size: 2rem;
+  margin: 0 7rem 2rem 7rem;
+
+}
+
+/* the following elements are part of the article_wrapper tag */
+
+.div_img {
+  margin:0 2rem 0 0rem;
+  justify-content: center;
+
+}
+
+.article_title a {
+  color: black;
+  text-decoration: none;
+  font-size: 1.2rem;
+  justify-content: center;
+  font-family: impact, charcoal, sans-serif;
+  margin: 0 4rem 0 0rem;
+}
+
+
+
+.article_title a:hover {
+  color: red;
+}
+
+p.article_title {
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+}
+
+
+p.article_source {
+  font-family: sans-serif;
+  margin-left: 0.5rem;
+}
+
+#sentiment_score_div {
+  color: white;
+  font-family: sans-serif;
+  margin-left: 2rem;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+#sentiment_text {
+  text-align: center;
+  margin:0.5rem 0 0 0.5rem;
+}
+
+#sentiment_score {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-left: 0.5rem;
+}
+
+/* here come the last part of my interactive website on my two pages: the footer */
+
+footer {
+  display: flex;
+  margin-top: 6rem;
+  background:rgba(255, 255, 255, 0.70);
+
+}
+
+#footer_text {
+  flex: 0 0 50%;
+  font-family: sans-serif;
+  margin-left: 2rem;
+}
+
+#footer_text a {
+  color: black;
+}
+
+#footer_text a:hover {
+  color: rgb(238,44,44);
+}
+
+#social_media {
+  margin: auto;
+  font-size: 2.5rem;
+  border-right: 1px solid black;
+}
+
+#social_media a {
+  color: black;
+  margin-right: 4rem;
+}
+
+
+/*There start my media queries */
+@media(max-width: 1100px) {
+
+  #main_section {
+    flex-direction: column;
+  }
+
+  #div_form {
+    max-width: 60%;
+    flex: 0 0 35%;
+  }
+
+  #div_form input[type="button"] {
+    width: 80%;
+    margin-left: 1.4rem;
+    font-size: 1.3rem;
+  }
+
+  #div_text {
+    max-width: 65%;
+    align-self: center;
+    background-color: rgba(255, 255, 255, 0.5); /* now my text div is below my form and I need to add a white (half transparent) background to facilitate the reading */
+    margin: auto;
+    margin-top: 1rem;
+  }
+
+  #div_text p {
+    margin-left: 0.5rem;
+  }
+}
+
+@media(max-width: 1000px) {
+
+  #graph_div {
+    flex: 0 0 80%;
+    margin-left: 0;
+  }
+
+  #article_wrapper {
+    flex-wrap: wrap;
+  }
+
+/* I progressively increase the size of my positive_output and negative_output so it easier to read on a small screen */
+  #positive_output {
+    flex: 0 0 65%;
+    margin: auto;
+  }
+
+  #negative_output {
+    flex: 0 0 65%;
+    margin: auto;
+  }
+
+
+}
+
+@media(max-width: 800px) {
+  #div_text { /* I progressively increase the div_text size */
+    max-width: 85%;
+  }
+}
+
+
+@media(max-width: 700px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  #explanation_graph_section {
+    margin: 3rem 2rem 1rem 2rem;
+  }
+
+  #articles_section {
+    margin: 3rem 2rem 5rem 2rem;
+  }
+
+  #positive_output {
+    flex: 0 0 80%;
+    margin: auto; /* margin: auto centers the element */
+  }
+
+  #negative_output {
+    flex: 0 0 80%;
+    margin: auto;
+  }
+
+
+  footer {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #social_media {
+    text-align: center;
+    margin-top: 0.5rem;
+    border-right: none;
+  }
+
+  #footer_text {
+    flex: 0 0 90%;
+    text-align: center;
+    margin-left: 0;
+  }
+}
+
+@media(max-width: 500px) {
+  #explanation_graph_section {
+    margin: auto;
+    margin-bottom: 2rem;
+  }
+
+  #graph_div {
+    flex: 0 0 80%;
+  }
+
+  #articles_section {
+    margin: auto;
+  }
+
+}
+
+@media(max-width: 400px) {
+  #div_form input[type="text"] {
+    flex: 0 0 70%;
+  }
+}

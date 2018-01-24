@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'> <!-- to make my webapp responsive -->
+	<title>My first website</title>
+	<link rel='stylesheet' href='style.css'>
+	<!-- The three following tags allow me to use the textillate-master plugin for dynamic writing -->
+  <script src='jquery-3.2.1.min.js'> </script>
+	<script src='textillate-master/jquery.textillate.js'></script>
+	<script src='textillate-master/assets/jquery.lettering.js'></script>
+	<script src='plotly/plotly-latest.min.js'></script> <!-- this script tag allows me to use the plotly API -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- link to awesome font for my social media icons -->
+
+
+<body id='body_result_page'> <!-- the body has a special id because I made some slight changes on this page -->
+	<header id='header_result_page'> <!-- Same for the header -->
+      <h1 class='title'>GOOD NEWS SELLS TOO</h1>
+
+  </header>
+
+	<div id='link_index'>
+		<a href='index.html'>Go back to the index</a> <!-- This a tag will allow the user to go back to the index page by clicking on it -->
+	</div>
+
+	<section id='explanation_graph_section'>
+
+		<div id='explanation'>
+    <p> Sorted by popularity and the topic you chose, here are displayed 20 articles organized in two coloumns. If you are in a good mood and don't want it to change, pick an article from the left column. If you fell like you can handle more bad news, pick an article from the right columns. </p>
+    <p> The graph below enables a quick comparison of the number of bad and good news. So you can know if we journalists speak in good terms or bad terms about your topic.</p>
+		</div>
+
+  	<div id='graph_div'></div> <!-- The div is empty because the code that will add elements in it is in JS -->
+
+	</section>
+
+
+	<section id='articles_section'>
+
+		<div id='positive_output'>
+      <h3>POSITIVE NEWS</h3>
+    <div id='positive_articles'>
+			<!-- A few more divs will be added in JS code that's why they don't appear here -->
+    </div>
+      <div id='oops'>
+        <img src='Images/oops.jpg' alt='oops-emoticone'>
+        <p>Oops, no more good news!</p>
+      </div>
+		</div>
+
+		<div id='negative_output'>
+      <h3>NEGATIVE NEWS</h3>
+			  <!-- A few more divs will be added in JS code that's why they don't appear here -->
+		</div>
+	</section>
+
+
+	<script>
+
+
+// extract the parameters from the api-index.html page request to import them on this new webpage
+	var extractParameters = function(){
+		var query = window.location.search.substring(1); //should I use the substring method o remove ?topic=
+		var params = query.split("&");
+
+		var return_data = {};
+
+		for(var i = 0; i< params.length; i++) {
+			var keyvalue = params[i].split("=");
+			console.log(keyvalue);
+			return_data[keyvalue[0]] = decodeURIComponent(keyvalue[1]);
+		};
+		return return_data;
+	};
+
+
+
+	var parameters = extractParameters();
+
+
+// Encode once more the parameters of my news API so we can make the request
+	var encodeParameters = function(parameters) {
+		var query_strings = [];
+		for (var apiKey in parameters) {
+			if(parameters.hasOwnProperty(apiKey)) {
+				var params_strings = apiKey + "=" + parameters[apiKey];
+				query_strings.push(params_strings);
+			};
+		};
+		return query_strings.join("&");
+	};
+
+//Encode the parameters of my text analysis API - this is almost the same function than below except that the APIKey is here called a token
+  var encodeParametersSentiment = function(parameters_sentiment) {
+    var query_strings_sentiment = [];
+    for(var token in parameters_sentiment) {
+      if(parameters_sentiment.hasOwnProperty(token)) {
+        var params_strings_sentiment = token + '=' + parameters_sentiment[token];
+        query_strings_sentiment.push(params_strings_sentiment);
+      };
+    };
+    return query_strings_sentiment.join("&");
+  };
+
+
+
+// This essential function combines my news API to my text analysis API and make a new request
+	var CombineApi = function(response) {
+		var topic = response.articles;
+		for (let i = 0; i < topic.length; i++) {
+			var article_url = topic[i].url; // this is the element I will need to link with my text analysis API
+
+    // I nest my second request from my text analysis API in the processResponse function of my News API so I can retrieve the url_article that I need
+      var sentimentAnalysis = function(article_url) {
+        var base_url = 'https://api.dandelion.eu/datatxt/sent/v1';
+        var myToken = '532ebc14921b430283a7548a998ce3eb';
+
+        var params_sentiment = {
+          token: myToken,
+          url: article_url
+        }
+
+        var query_url = base_url + '?' + encodeParametersSentiment(params_sentiment);
+
+        var sentimentRequest = new XMLHttpRequest(query_url);
+        sentimentRequest.open('GET', query_url);
+        sentimentRequest.addEventListener('load', function(){
+          var responseSentiment = JSON.parse(this.response);
+          processResponse(responseSentiment, topic[i]);
+        });
+        sentimentRequest.send();
+
+      };
+
+      sentimentAnalysis(article_url);
+
+		};
+	};
+
+// Process the response of my two APIs together !
+  var processResponse = function(responseSentiment, article) {
+    var response_div = document.querySelector('#response_div');
+    var sentiment_url = responseSentiment.sentiment;
+
+
+      var title = article.title; // To display the articles, I will need their title
+      var source = 'Source: ' + article.source.name; // I also want the source (which media)
+      var image = article.urlToImage; // and an image
+      var div_img = document.createElement('div'); // Then, I create a new div for the image as well as the other objects I created
+      div_img.className = 'div_img'; // I give them id so I can style them on my CSS sheet
+      var para_title = document.createElement('p')
+      para_title.className = 'article_title';
+      var para_source = document.createElement('p');
+      para_source.className = 'article_source';
+
+      //These variables I created below allow me to link my articles' title directly to the article of the internet users are interested
+      var a = document.createElement('a');
+      var textLink = document.createTextNode(title);
+      a.appendChild(textLink);
+      a.href = article.url;
+      a.id = 'title_link';
+
+
+      var source_text = document.createTextNode(source);
+      var title_text = document.createTextNode(title);
+      var new_image = document.createElement('img');
+      new_image.src = image;
+      div_img.append(new_image);
+      para_title.append(a);
+
+
+      para_source.append(document.createElement('br'));
+      new_image.append(new_image.src);
+      para_source.append(source_text);
+
+      //this article_wrapper variable will encompass all the other elements I got from the News API (source, title, image
+
+			var article_wrapper = document.createElement('div');
+			article_wrapper.id = 'article_wrapper';
+			article_wrapper.append(div_img);
+			article_wrapper.append(para_title);
+			article_wrapper.append(para_source);
+
+
+
+
+
+
+      var positive_col = document.querySelector('#positive_articles');
+      var negative_col = document.querySelector('#negative_output');
+
+      if(sentiment_url.type === 'positive' || sentiment_url.type === 'neutral') { // With this loop, I want to create two columns - one for the negatively rated article and one for the positive. I will also display the positive or negative score of each article
+				positive_col.append(article_wrapper);
+				var sentiment_text = 'The positivity rate of this article is: ';
+      }
+      else if(sentiment_url.type === 'negative') {
+				negative_col.append(article_wrapper);
+				var sentiment_text = 'The negativity rate of this article is: ';
+      }
+
+      var sentiment_score_notrounded = sentiment_url.score;
+			var sentiment_score = Math.round( sentiment_score_notrounded * 10 ) / 10; //I rounded up my sentiment score's number otherwise there is too many decimals
+      var sentiment_score_display = document.createTextNode(sentiment_score);
+			var sentiment_text_display = document.createTextNode(sentiment_text);
+
+			var sentiment_score_para = document.createElement('p');
+			sentiment_score_para.id = 'sentiment_score'
+			sentiment_score_para.append(sentiment_score_display);
+			var sentiment_text_para = document.createElement('p');
+			sentiment_text_para.id = 'sentiment_text';
+			sentiment_text_para.append(sentiment_text_display);
+
+			var sentiment_score_div = document.createElement('div');
+			sentiment_score_div.id = 'sentiment_score_div';
+			sentiment_score_div.append(sentiment_text_para);
+			sentiment_score_div.append(sentiment_score_para)
+			article_wrapper.append(sentiment_score_div);
+
+
+			var num_negative_articles = negative_col.children.length; // number of each negative articles add one by one
+			var num_positive_articles = positive_col.children.length; // idem for positive articles
+
+
+
+			bar_chart(num_positive_articles, num_negative_articles);
+
+  }
+
+	/*  the next function creates a bar chart with the plotky API. One bar will represents the number of good news
+	and the other one the bad news */
+
+
+	var bar_chart = function(num_positive_articles, num_negative_articles) {
+
+	  var sentiment_value = ['positive news', 'negative news'];
+
+		var number_article = [num_positive_articles, num_negative_articles];
+
+				var result = {
+				  x: sentiment_value,
+				  y: number_article,
+				  type: 'bar',
+				  text: number_article,
+				  textposition: 'auto',
+				  hoverinfo: 'none',
+				  marker: {
+				    color: 'rgb(238,44,44)',
+				    opacity: 0.6,
+				    line: {
+				      color: 'rbg(8,48,107)',
+				      width: 1.5
+				    }
+				  }
+				};
+
+				var data = [result];
+
+				var layout = {
+				  title: 'Number of positive and negative news displayed',
+					font:{
+					family: 'impact, charcoal, sans-serif'
+				  },
+			  };
+
+				/* Ploty's graphs are not automatically responsive, this function makes my graph responsive */
+
+				(function() {
+
+					var d3 = Plotly.d3;
+
+					var WIDTH_IN_PERCENT_OF_PARENT = 70,
+					    HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+					var gd3 = d3.select('#graph_div')
+					    .style({
+					        width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+					        'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 3 + '%',
+									'margin-right': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 3 + '%',
+
+					        height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+					        'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 1.5 + 'vh'
+					    });
+
+					var gd = gd3.node();
+
+					window.onresize = function() {
+					    Plotly.Plots.resize(gd);
+					};
+
+			  })();
+
+
+				Plotly.newPlot('graph_div', data, layout);
+
+	}
+
+
+
+// this function is similar to the doNewsSearch from my Index page but this time, it's sending the request
+	var doSearch = function(topic) {
+		var url = 'https://newsapi.org/v2/everything';
+
+		const API_KEY = '2f1222a8459543de8fdb9a5330dd280b';
+
+		var params = {
+			apiKey: API_KEY,
+			q: topic,
+			sortBy: 'popularity',
+		};
+
+		var query_url = url + '?' + encodeParameters(params);
+
+
+		var req = new XMLHttpRequest(query_url);
+		req.open('GET', query_url);
+		req.addEventListener('load', function(){
+			var response = JSON.parse(this.response);
+			CombineApi(response);
+		});
+		req.send();
+	};
+
+
+    doSearch(parameters['topic']); //To trigger my requests and all my JS code
+
+
+
+	</script>
+
+
+	<footer>
+
+		<div id="social_media">
+
+			<!-- This hyperlink tag nest i tags representing the awesome font. The awesome font allow me to display nice social media icons -->
+			<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+			<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+			<a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+
+		</div>
+
+		<div id="footer_text">
+			<!-- Quick access to the API I used if someone wants more information -->
+			<p> Use of the <a href="https://dandelion.eu/">Dandelion API's</a> sentiment analysis</p>
+			<p> Use of the <a href="https://newsapi.org/s/google-news-api">Google News API</a></p>
+
+		</div>
+
+
+	</footer>
+
+
+
+</body>
+</html>
