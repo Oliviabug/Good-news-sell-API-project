@@ -5,7 +5,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: url('Images/front-media.jpg');
+  background: url('front-media.jpg');
   background-size: cover;
   font-family: serif;
   font-size: 16px; /* that's the reference when I will use the rem relative unit */
